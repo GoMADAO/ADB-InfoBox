@@ -1,0 +1,9 @@
+/people/person
+/book/author
+/film/actor
+/tv/tv_actor
+/organization/organization_founder
+/business/board_member
+/sports/sports_league
+/sports/sports_team
+/sports/professional_sports_team

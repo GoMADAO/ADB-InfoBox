@@ -1,10 +1,11 @@
 import json
 import urllib
 
+# function to do Search API call
 def searchQuery():
 
 	api_key = open("api_key.txt").read()
-	print api_key
+	# print api_key
 	query = 'blue bottle'
 	service_url = 'https://www.googleapis.com/freebase/v1/search'
 	params = {
@@ -15,6 +16,7 @@ def searchQuery():
 	response = json.loads(urllib.urlopen(url).read())
 	return response
 
+# function to do Topic API call
 def topicQuery():
 
 	api_key = open("api_key.txt").read()
@@ -28,17 +30,18 @@ def topicQuery():
 	topic = json.loads(urllib.urlopen(url).read())
 	return topic
 
-def fileWrite(data, fileName):
+# Write JSON response to file
+def jsonWrite(data, fileName):
 	with open(fileName, 'w') as outfile:
 		json.dump(data, outfile, sort_keys = True, indent = 4)
 	
 
 def main():
 	searchResult = searchQuery()
-	fileWrite(searchResult, 'search_response.txt')
+	jsonWrite(searchResult, 'search_response.txt')
 
 	topicResult = topicQuery()
-	fileWrite(topicResult, 'topic_response.txt')
+	jsonWrite(topicResult, 'topic_response.txt')
 
 if __name__ == '__main__':
 	main()

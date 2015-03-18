@@ -1,0 +1,9 @@
+/common/topic/alias 
+/people/person/date_of_birth
+/people/person/place_of_birth
+/people/deceased_person/date_of_death
+/people/deceased_person/cause_of_death
+/people/deceased_person/place_of_death
+/people/person/sibling_s
+/people/person/spouse_s
+/common/topic/description

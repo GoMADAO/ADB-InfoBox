@@ -1,9 +1,9 @@
-/common/topic/alias 
-/people/person/date_of_birth
-/people/person/place_of_birth
-/people/deceased_person/date_of_death
-/people/deceased_person/cause_of_death
-/people/deceased_person/place_of_death
-/people/person/sibling_s
-/people/person/spouse_s
-/common/topic/description
+/common/topic/alias-Name
+/people/person/date_of_birth-Birthday
+/people/person/place_of_birth-Place of birth
+/people/deceased_person/date_of_death-Date of death
+/people/deceased_person/cause_of_death-Cause of death
+/people/deceased_person/place_of_death-Place of death
+/people/person/sibling_s-Siblings
+/people/person/spouse_s-Spouses
+/common/topic/description-Description

@@ -49,6 +49,16 @@ def matchEntity(entities):
 			matchAny = True
 
 	return entityDict, matchAny
+
+def personInfo(infoBox):
+	
+	propertyDict = {}
+
+	# Build a dictionary of the entities we are interested in
+	with open("person_property.txt","r") as text:
+		propertyDict = dict(line.strip().split('-') for line in text)
+
+	print propertyDict
 	
 # Write JSON response to file
 def jsonWrite(data, fileName):
@@ -62,7 +72,11 @@ def main():
 	searchResult = searchQuery(query)
 	jsonWrite(searchResult, 'search_response.txt')
 
+	# To keep track of all the existing entities that we are interested in
 	entityDict = {}
+	# To store the information extracted from Topic API response
+	infoBox = {}
+
 	# iteration = 0
 
  	for result in searchResult['result']:
@@ -73,16 +87,7 @@ def main():
 			break
 		# iteration += 1
 
-	print iteration, entityDict
-
-	
-
-	
-	# print topicResult['property']
-	# for var prop in topicResult:
-
-	# First look into topicResult['property']['/type/object/type']
-
+	personInfo(infoBox)
 
 	jsonWrite(topicResult, 'topic_response.txt')
 

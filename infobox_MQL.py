@@ -36,6 +36,7 @@ def topicQuery(topic_id):
 # into this function
 def matchEntity(entities):
 	entityDict = {}
+	matchAny = False
 
 	# Build a dictionary of the entities we are interested in
 	with open("entity.txt","r") as text:
@@ -45,8 +46,9 @@ def matchEntity(entities):
 		if entity['id'] in entityDict:
 			entityDict[entity['id']]['found'] = True
 			entityDict[entity['id']]['entityType'] = entity['text']
-	
-	print entityDict
+			matchAny = True
+
+	return entityDict, matchAny
 	
 # Write JSON response to file
 def jsonWrite(data, fileName):
@@ -60,13 +62,22 @@ def main():
 	searchResult = searchQuery(query)
 	jsonWrite(searchResult, 'search_response.txt')
 
+	entityDict = {}
+	# iteration = 0
+
+ 	for result in searchResult['result']:
+ 		topicResult = topicQuery(result['mid'])
+		entityDict, match = matchEntity(topicResult['property']['/type/object/type']['values'])
+
+		if match == True:
+			break
+		# iteration += 1
+
+	print iteration, entityDict
+
 	
 
-	# print searchResult['result'][0]['mid']
-
-	topicResult = topicQuery(searchResult['result'][0]['mid'])
-
-	matchEntity(topicResult['property']['/type/object/type']['values'])
+	
 	# print topicResult['property']
 	# for var prop in topicResult:
 

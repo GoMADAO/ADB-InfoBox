@@ -1,12 +1,14 @@
 import json
 import urllib
 
+import sys
+
 # function to do Search API call
-def searchQuery():
+def searchQuery(query):
 
 	api_key = open("api_key.txt").read()
 	# print api_key
-	query = 'blue bottle'
+	# query = 'blue bottle'
 	service_url = 'https://www.googleapis.com/freebase/v1/search'
 	params = {
 	        'query': query,
@@ -17,11 +19,11 @@ def searchQuery():
 	return response
 
 # function to do Topic API call
-def topicQuery():
+def topicQuery(topic_id):
 
 	api_key = open("api_key.txt").read()
 	service_url = 'https://www.googleapis.com/freebase/v1/topic'
-	topic_id = '/m/0d6lp'
+	# topic_id = '/m/017nt' # id of bill gates
 	params = {
 	  'key': api_key,
 	  'filter': 'suggest'
@@ -37,10 +39,19 @@ def jsonWrite(data, fileName):
 	
 
 def main():
-	searchResult = searchQuery()
+	query = sys.argv[1]
+	searchResult = searchQuery(query)
 	jsonWrite(searchResult, 'search_response.txt')
 
-	topicResult = topicQuery()
+	print searchResult['result'][0]['mid']
+
+	topicResult = topicQuery(searchResult['result'][0]['mid'])
+	# print topicResult['property']
+	# for var prop in topicResult:
+
+	# First look into topicResult['property']['/type/object/type']
+
+
 	jsonWrite(topicResult, 'topic_response.txt')
 
 if __name__ == '__main__':

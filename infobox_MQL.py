@@ -53,36 +53,55 @@ def matchEntity(entities):
 
 	return entityDict, matchAny
 
-def personInfo(topicResult):
+def infoExtractor(pattern, infoBox, topicResult):
 	
 	propertyDict = {}
-	infoBox = {}
+	# infoBox = {}
 
 	# Build a dictionary of the entities we are interested in
-	with open("person_property.txt","r") as text:
+	with open(pattern,"r") as text:
 		for line in text:
 			prop = line.strip().split('-')
 			# first is the key, last is the name of the property
-			propertyDict[prop[0]] = prop[1:]
+			if len(prop) == 1:
+				propName = prop[0].split('+')
+				propertyDict[propName[0]] = propName[1]
+			else:
+				propertyDict[prop[0]] = {}
+				for pair in prop[1:]:
+					keyValue = pair.split('+') 
+					propertyDict[prop[0]][keyValue[0]] = keyValue[1]
 
 	# Extract properties from the Topic API response
 	for prop in propertyDict:
 		if prop in topicResult['property']:
 			temp = topicResult['property'][prop]
-			matchObj = re.match(r'.+_s', prop, 0)
-			if matchObj:
+			print prop
+			print "Pattern matching"
+			if type(propertyDict[prop]) is dict:
 				# array of "values"
-				for entry in temp['values']:
-					temp2 = entry['property']
-					# multiple property needs to be extracted
-					for subprop in propertyDict[prop][:-1]:
+				print "multiple entries"
+				# multiple property needs to be extracted
+				for subprop in propertyDict[prop]:
+					infoBox[propertyDict[prop][subprop]] = []
+					for entry in temp['values']:
+						temp2 = entry['property']
 						if subprop in temp2:
-							infoBox[propertyDict[prop][-1]] = temp2[subprop]['values']['text']
+							print temp2[subprop]['values'][0]['text']
+							infoBox[propertyDict[prop][subprop]].append(temp2[subprop]['values'][0]['text'])
 			else:
-				infoBox[propertyDict[prop][-1]] = temp['values'][0]['text']
+				if 'valuetype' in temp:
+					if temp["valuetype"] != "object":
+						# print temp['values'][0]['value']
+						infoBox[propertyDict[prop]] = temp['values'][0]['value']
+					else:
+						infoBox[propertyDict[prop]] = temp['values'][0]['text']
+
+					print infoBox[propertyDict[prop]]
+				
 			
-	print propertyDict
-	print infoBox
+	# print propertyDict
+	# print infoBox
 	
 # Write JSON response to file
 def jsonWrite(data, fileName):
@@ -93,6 +112,7 @@ def jsonWrite(data, fileName):
 def main():
 	# Taking query from command line
 	query = sys.argv[1]
+	query = "Bill Gates"
 	searchResult = searchQuery(query)
 	jsonWrite(searchResult, 'search_response.txt')
 
@@ -111,9 +131,13 @@ def main():
 			break
 		# iteration += 1
 
-	personInfo(topicResult)
-
 	jsonWrite(topicResult, 'topic_response.txt')
+
+	infoExtractor('person_property.txt', infoBox, topicResult)
+
+	jsonWrite(infoBox, 'infoBox.txt')
+
+	
 
 if __name__ == '__main__':
 	main()

@@ -3,6 +3,9 @@ import urllib
 
 import sys
 
+# For regular expression
+import re
+
 # function to do Search API call
 def searchQuery(query):
 
@@ -23,7 +26,7 @@ def topicQuery(topic_id):
 
 	api_key = open("api_key.txt").read()
 	service_url = 'https://www.googleapis.com/freebase/v1/topic'
-	# topic_id = '/m/017nt' # id of bill gates
+	topic_id = '/m/016z2j' # id of actor
 	params = {
 	  'key': api_key,
 	  'filter': 'suggest'
@@ -50,15 +53,36 @@ def matchEntity(entities):
 
 	return entityDict, matchAny
 
-def personInfo(infoBox):
+def personInfo(topicResult):
 	
 	propertyDict = {}
+	infoBox = {}
 
 	# Build a dictionary of the entities we are interested in
 	with open("person_property.txt","r") as text:
-		propertyDict = dict(line.strip().split('-') for line in text)
+		for line in text:
+			prop = line.strip().split('-')
+			# first is the key, last is the name of the property
+			propertyDict[prop[0]] = prop[1:]
 
+	# Extract properties from the Topic API response
+	for prop in propertyDict:
+		if prop in topicResult['property']:
+			temp = topicResult['property'][prop]
+			matchObj = re.match(r'.+_s', prop, 0)
+			if matchObj:
+				# array of "values"
+				for entry in temp['values']:
+					temp2 = entry['property']
+					# multiple property needs to be extracted
+					for subprop in propertyDict[prop][:-1]:
+						if subprop in temp2:
+							infoBox[propertyDict[prop][-1]] = temp2[subprop]['values']['text']
+			else:
+				infoBox[propertyDict[prop][-1]] = temp['values'][0]['text']
+			
 	print propertyDict
+	print infoBox
 	
 # Write JSON response to file
 def jsonWrite(data, fileName):
@@ -87,7 +111,7 @@ def main():
 			break
 		# iteration += 1
 
-	personInfo(infoBox)
+	personInfo(topicResult)
 
 	jsonWrite(topicResult, 'topic_response.txt')
 

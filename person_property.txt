@@ -4,6 +4,6 @@
 /people/deceased_person/date_of_death-Date of death
 /people/deceased_person/cause_of_death-Cause of death
 /people/deceased_person/place_of_death-Place of death
-/people/person/sibling_s-Siblings
-/people/person/spouse_s-Spouses
+/people/person/sibling_s-/people/sibling_relationship/sibling-Siblings
+/people/person/spouse_s-/people/marriage/spouse-Spouses
 /common/topic/description-Description

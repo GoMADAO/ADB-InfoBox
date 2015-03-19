@@ -1,0 +1,6 @@
+/sports/sports_league/championship+Championship
+/sports/sports_league/sport+Sport
+/organization/organization/slogan+Slogan
+/common/topic/official_website+WebSite
+/common/topic/description+Description
+/sports/sports_league/teams-/sports/sports_league_participation/team+Team

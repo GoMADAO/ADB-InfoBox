@@ -178,8 +178,6 @@ def jsonWrite(data, fileName):
 
 def main():
 	# Taking query from command line
-	if sys.argv[1] == '-q':
-		query = sys.argv[2]
 
 	if sys.argv[3] == '-t':
 		queryType = sys.argv[4]
@@ -213,6 +211,12 @@ def main():
 
 			infoExtractor('actor_property.txt', infoBox, topicResult)
 
+			infoExtractor('businessperson_property.txt', infoBox, topicResult)
+
+			infoExtractor('sportsteam_property.txt', infoBox, topicResult)
+
+			infoExtractor('league_property.txt', infoBox, topicResult)
+
 			jsonWrite(infoBox, 'infoBox.txt')
 
 		elif queryType == 'question':
@@ -230,8 +234,6 @@ def main():
 
 			jsonWrite(response, 'book_mql.txt')
 			# jsonWrite(response2, 'founder_mql.txt')
-
-
 	
 
 if __name__ == '__main__':

@@ -128,7 +128,49 @@ def infoExtractor(pattern, infoBox, topicResult):
 			
 	
 	# print infoBox
-	
+
+# Do MQL query
+def mqlQuery(query):
+	api_key = open("api_key.txt").read()
+	service_url = 'https://www.googleapis.com/freebase/v1/mqlread'
+
+	# We are only looking for two types -- Book and Organizations
+	query = [{
+	  	"/book/author/works_written": [{
+	  	  "a:name": None,
+	  	  "name~=": query
+	  	}],
+	  	"id": None,
+	  	"name": None,
+	  	"type": "/book/author"
+	}]
+	query2 = [{
+	  	"/organization/organization_founder/organizations_founded": [{
+	  	  "a:name": None,
+	  	  "name~=": query
+	  	}],
+	  	"id": None,
+	  	"name": None,
+	  	"type": "/organization/organization_founder"
+	}]
+
+	params = {
+	        'query': json.dumps(query),
+	        'key': api_key
+	}
+	params2 = {
+	        'query': json.dumps(query2),
+	        'key': api_key
+	}
+
+	url = service_url + '?' + urllib.urlencode(params)
+	url2 = service_url + '?' + urllib.urlencode(params2)
+
+	response = json.loads(urllib.urlopen(url).read())
+	response2 = json.loads(urllib.urlopen(url2).read())
+
+	return response, response2
+
 # Write JSON response to file
 def jsonWrite(data, fileName):
 	with open(fileName, 'w') as outfile:

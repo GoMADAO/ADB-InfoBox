@@ -135,17 +135,18 @@ def mqlQuery(query):
 	service_url = 'https://www.googleapis.com/freebase/v1/mqlread'
 
 	# We are only looking for two types -- Book and Organizations
-	query = [{
+	query1 = [{
 	  	"/book/author/works_written": [{
 	  	  "a:name": None,
 	  	  "name~=": query
 	  	}],
 	  	"id": None,
 	  	"name": None,
-	  	"type": "/book/author"
+	  	"type": "/book/author",
+	  	"limit": 1000
 	}]
 	params = {
-	        'query': json.dumps(query),
+	        'query': json.dumps(query1),
 	        'key': api_key
 	}
 	url = service_url + '?' + urllib.urlencode(params)

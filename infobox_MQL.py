@@ -56,6 +56,8 @@ def matchEntity(entities):
 def infoExtractor(pattern, infoBox, topicResult):
 	
 	propertyDict = {}
+	# If there is third level of information
+	thirdLevel = False
 	# infoBox = {}
 
 	# Build a dictionary of the entities we are interested in
@@ -72,6 +74,8 @@ def infoExtractor(pattern, infoBox, topicResult):
 					keyValue = pair.split('+') 
 					propertyDict[prop[0]][keyValue[0]] = keyValue[1]
 
+	print propertyDict
+
 	# Extract properties from the Topic API response
 	for prop in propertyDict:
 		if prop in topicResult['property']:
@@ -82,25 +86,49 @@ def infoExtractor(pattern, infoBox, topicResult):
 				# array of "values"
 				print "multiple entries"
 				# multiple property needs to be extracted
-				for subprop in propertyDict[prop]:
-					infoBox[propertyDict[prop][subprop]] = []
-					for entry in temp['values']:
-						temp2 = entry['property']
+
+				for subprop2 in propertyDict[prop]:
+					matchObj = re.match(r'.*'+re.escape(propertyDict[prop][subprop2]), subprop2, re.I)
+					if matchObj:
+						infoBox[propertyDict[prop][subprop2]] = []
+						thirdLevel = True
+						break
+
+				if thirdLevel == False:
+					infoBox[propertyDict[prop][subprop2]] = []
+				
+				tempDict = {}
+
+				for entry in temp['values']:
+					temp2 = entry['property']
+					
+					for subprop in propertyDict[prop]:
 						if subprop in temp2:
-							print temp2[subprop]['values'][0]['text']
-							infoBox[propertyDict[prop][subprop]].append(temp2[subprop]['values'][0]['text'])
+							print subprop
+							print temp2[subprop]['values']
+							if temp2[subprop]['values'] != []:
+								tempDict[propertyDict[prop][subprop]] = temp2[subprop]['values'][0]['text']
+							else:
+								# Sometimes "To" don't have any value
+								tempDict[propertyDict[prop][subprop]] = ''
+					infoBox[propertyDict[prop][subprop2]].append(tempDict)
+					tempDict = {}
+
+
 			else:
 				if 'valuetype' in temp:
-					if temp["valuetype"] != "object":
-						# print temp['values'][0]['value']
-						infoBox[propertyDict[prop]] = temp['values'][0]['value']
-					else:
-						infoBox[propertyDict[prop]] = temp['values'][0]['text']
+					infoBox[propertyDict[prop]] = []
+					for result in temp['values']:	
+						if temp["valuetype"] != "object":
+							# print temp['values'][0]['value']
+							infoBox[propertyDict[prop]].append(result['value'])
+						else:
+							infoBox[propertyDict[prop]].append(result['text'])
 
 					print infoBox[propertyDict[prop]]
 				
 			
-	# print propertyDict
+	
 	# print infoBox
 	
 # Write JSON response to file
@@ -134,6 +162,8 @@ def main():
 	jsonWrite(topicResult, 'topic_response.txt')
 
 	infoExtractor('person_property.txt', infoBox, topicResult)
+
+	infoExtractor('author_property.txt', infoBox, topicResult)
 
 	jsonWrite(infoBox, 'infoBox.txt')
 

@@ -203,6 +203,8 @@ def printResponse(data, queryType):
 
 def main():
 	# Taking query from command line
+	if sys.argv[1] == '-q':
+		query = sys.argv[2]
 
 	if sys.argv[3] == '-t':
 		queryType = sys.argv[4]

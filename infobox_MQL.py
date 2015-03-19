@@ -5,6 +5,8 @@ import sys
 
 # For regular expression
 import re
+# To sort the list of dictionary by some key
+from operator import itemgetter
 
 # function to do Search API call
 def searchQuery(query):
@@ -175,6 +177,28 @@ def mqlQuery(query):
 def jsonWrite(data, fileName):
 	with open(fileName, 'w') as outfile:
 		json.dump(data, outfile, sort_keys = True, indent = 4)
+
+def printResponse(data, queryType):
+	if queryType == 'book':
+		key = '/book/author/works_written'
+	elif queryType == 'organization':
+		key = '/organization/organization_founder/organizations_founded'
+
+	string = ''
+	index = 0
+
+	newlist = sorted(data['result'], key=itemgetter('name')) 
+
+	if newlist != []:
+		for entry in newlist:
+			index += 1
+			string = str(index)+'. '+entry['name']+' (as Author) '+'created <'+entry[key][0]['a:name']+'>'
+			if len(entry[key]) > 1:
+				for book in range(1, len(entry[key])):
+					string += ', <'+entry[key][book]['a:name']+'>'
+
+			print string
+
 	
 
 def main():
@@ -229,6 +253,7 @@ def main():
 
 			response = mqlQuery(query)
 
+			printResponse(response, 'book')
 			jsonWrite(response, 'book_mql.txt')
 			# jsonWrite(response2, 'founder_mql.txt')
 

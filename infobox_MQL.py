@@ -88,14 +88,12 @@ def infoExtractor(pattern, infoBox, topicResult):
 				# multiple property needs to be extracted
 
 				for subprop2 in propertyDict[prop]:
-					matchObj = re.match(r'.*'+re.escape(propertyDict[prop][subprop2]), subprop2, re.I)
+					matchObj = re.match(r'.*'+re.escape(propertyDict[prop][subprop2])+r'.*', subprop2, re.I)
 					if matchObj:
-						infoBox[propertyDict[prop][subprop2]] = []
-						thirdLevel = True
 						break
 
-				if thirdLevel == False:
-					infoBox[propertyDict[prop][subprop2]] = []
+				# This "subprob2" should be the key of the array of dict.
+				infoBox[propertyDict[prop][subprop2]] = []
 				
 				tempDict = {}
 
@@ -140,7 +138,7 @@ def jsonWrite(data, fileName):
 def main():
 	# Taking query from command line
 	query = sys.argv[1]
-	query = "Bill Gates"
+	query = "Robert Downey Jr."
 	searchResult = searchQuery(query)
 	jsonWrite(searchResult, 'search_response.txt')
 
@@ -164,6 +162,8 @@ def main():
 	infoExtractor('person_property.txt', infoBox, topicResult)
 
 	infoExtractor('author_property.txt', infoBox, topicResult)
+
+	infoExtractor('actor_property.txt', infoBox, topicResult)
 
 	jsonWrite(infoBox, 'infoBox.txt')
 

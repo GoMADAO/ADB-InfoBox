@@ -1,0 +1,4 @@
+/book/author/works_written+Books
+/book/book_subject/works+Books about
+/influence/influence_node/influenced+Influenced people
+/influence/influence_node/influenced_by+Influenced by whom

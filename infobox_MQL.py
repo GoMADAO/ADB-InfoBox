@@ -179,35 +179,44 @@ def jsonWrite(data, fileName):
 
 def main():
 	# Taking query from command line
-	query = sys.argv[1]
-	query = "Robert Downey Jr."
-	searchResult = searchQuery(query)
-	jsonWrite(searchResult, 'search_response.txt')
+	if sys.argv[1] == '-q':
+		query = sys.argv[2]
 
-	# To keep track of all the existing entities that we are interested in
-	entityDict = {}
-	# To store the information extracted from Topic API response
-	infoBox = {}
+	if sys.argv[3] == '-t':
+		queryType = sys.argv[4]
 
-	# iteration = 0
+		if queryType == 'infobox':
+			# query = "Robert Downey Jr."
+			print query
+			searchResult = searchQuery(query)
+			jsonWrite(searchResult, 'search_response.txt')
 
- 	for result in searchResult['result']:
- 		topicResult = topicQuery(result['mid'])
-		entityDict, match = matchEntity(topicResult['property']['/type/object/type']['values'])
+			# To keep track of all the existing entities that we are interested in
+			entityDict = {}
+			# To store the information extracted from Topic API response
+			infoBox = {}
 
-		if match == True:
-			break
-		# iteration += 1
+			# iteration = 0
 
-	jsonWrite(topicResult, 'topic_response.txt')
+		 	for result in searchResult['result']:
+		 		topicResult = topicQuery(result['mid'])
+				entityDict, match = matchEntity(topicResult['property']['/type/object/type']['values'])
 
-	infoExtractor('person_property.txt', infoBox, topicResult)
+				if match == True:
+					break
+				# iteration += 1
 
-	infoExtractor('author_property.txt', infoBox, topicResult)
+			jsonWrite(topicResult, 'topic_response.txt')
 
-	infoExtractor('actor_property.txt', infoBox, topicResult)
+			infoExtractor('person_property.txt', infoBox, topicResult)
 
-	jsonWrite(infoBox, 'infoBox.txt')
+			infoExtractor('author_property.txt', infoBox, topicResult)
+
+			infoExtractor('actor_property.txt', infoBox, topicResult)
+
+			jsonWrite(infoBox, 'infoBox.txt')
+		elif queryType == 'question':
+			print query
 
 	
 

@@ -5,5 +5,5 @@
 /people/deceased_person/cause_of_death+Cause of death
 /people/deceased_person/place_of_death+Place of death
 /people/person/sibling_s-/people/sibling_relationship/sibling+Siblings
-/people/person/spouse_s-/people/marriage/spouse+Spouses
+/people/person/spouse_s-/people/marriage/spouse+Spouse-/people/marriage/from+Marriage from-/people/marriage/to+Marriage to-/people/marriage/location_of_ceremony+Marriage location
 /common/topic/description+Description

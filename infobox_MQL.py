@@ -144,32 +144,31 @@ def mqlQuery(query):
 	  	"name": None,
 	  	"type": "/book/author"
 	}]
-	query2 = [{
-	  	"/organization/organization_founder/organizations_founded": [{
-	  	  "a:name": None,
-	  	  "name~=": query
-	  	}],
-	  	"id": None,
-	  	"name": None,
-	  	"type": "/organization/organization_founder"
-	}]
-
 	params = {
 	        'query': json.dumps(query),
 	        'key': api_key
 	}
-	params2 = {
-	        'query': json.dumps(query2),
-	        'key': api_key
-	}
-
 	url = service_url + '?' + urllib.urlencode(params)
-	url2 = service_url + '?' + urllib.urlencode(params2)
-
 	response = json.loads(urllib.urlopen(url).read())
-	response2 = json.loads(urllib.urlopen(url2).read())
 
-	return response, response2
+	# query2 = [{
+	#   	"/organization/organization_founder/organizations_founded": [{
+	#   	  "a:name": None,
+	#   	  "name~=": query
+	#   	}],
+	#   	"id": None,
+	#   	"name": None,
+	#   	"type": "/organization/organization_founder"
+	# }]
+	# params2 = {
+	#         'query': json.dumps(query2),
+	#         'key': api_key
+	# }
+	# url2 = service_url + '?' + urllib.urlencode(params2)
+	# response2 = json.loads(urllib.urlopen(url2).read())
+	
+	# return response
+	return response
 
 # Write JSON response to file
 def jsonWrite(data, fileName):
@@ -215,8 +214,23 @@ def main():
 			infoExtractor('actor_property.txt', infoBox, topicResult)
 
 			jsonWrite(infoBox, 'infoBox.txt')
+
 		elif queryType == 'question':
+			# print query
+
+			matchObj = re.match(r'Who created (.*?)\?', query, re.I)
+			query = matchObj.group(1)
+
+			# Get rid of the question mark
+			# if query[-1] == '?':
+			# 	query = query[:-1]
 			print query
+
+			response = mqlQuery(query)
+
+			jsonWrite(response, 'book_mql.txt')
+			# jsonWrite(response2, 'founder_mql.txt')
+
 
 	
 

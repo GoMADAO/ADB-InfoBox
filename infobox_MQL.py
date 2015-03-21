@@ -63,6 +63,7 @@ def infoExtractor(pattern, infoBox, topicResult):
 	# infoBox = {}
 
 	# Build a dictionary of the entities we are interested in
+	# pattern is actually a configuration file
 	with open(pattern,"r") as text:
 		for line in text:
 			prop = line.strip().split('-')
@@ -89,6 +90,7 @@ def infoExtractor(pattern, infoBox, topicResult):
 				print "multiple entries"
 				# multiple property needs to be extracted
 
+				# By design, this would find the right name to be key
 				for subprop2 in propertyDict[prop]:
 					matchObj = re.match(r'.*'+re.escape(propertyDict[prop][subprop2])+r'.*', subprop2, re.I)
 					if matchObj:
@@ -99,6 +101,7 @@ def infoExtractor(pattern, infoBox, topicResult):
 				
 				tempDict = {}
 
+				# Extract the data we are interested in and build a dictionary
 				for entry in temp['values']:
 					temp2 = entry['property']
 					
@@ -179,6 +182,7 @@ def jsonWrite(data, fileName):
 		json.dump(data, outfile, sort_keys = True, indent = 4)
 
 def printResponse(data, queryType):
+	# Different entities to look at for book and organization
 	if queryType == 'book':
 		key = '/book/author/works_written'
 	elif queryType == 'organization':
@@ -187,8 +191,10 @@ def printResponse(data, queryType):
 	string = ''
 	index = 0
 
+	# Sort the returned result according the 'name' value
 	newlist = sorted(data['result'], key=itemgetter('name')) 
 
+	# Print on the terminal
 	if newlist != []:
 		for entry in newlist:
 			index += 1
@@ -222,6 +228,8 @@ def main():
 
 			# iteration = 0
 
+			# Keep calling Topic API until it finds a response that contains at least
+			# one of six entities we are interested in
 		 	for result in searchResult['result']:
 		 		topicResult = topicQuery(result['mid'])
 				entityDict, match = matchEntity(topicResult['property']['/type/object/type']['values'])
@@ -247,14 +255,10 @@ def main():
 			jsonWrite(infoBox, 'infoBox.txt')
 
 		elif queryType == 'question':
-			# print query
 
 			matchObj = re.match(r'Who created (.*?)\?', query, re.I)
 			query = matchObj.group(1)
 
-			# Get rid of the question mark
-			# if query[-1] == '?':
-			# 	query = query[:-1]
 			print query
 
 			response = mqlQuery(query)

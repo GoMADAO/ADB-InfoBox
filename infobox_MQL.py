@@ -14,9 +14,6 @@ from operator import itemgetter
 # function to do Search API call
 def searchQuery(query, api_key):
 
-	#api_key = open("api_key.txt").read()
-	# print api_key
-	# query = 'blue bottle'
 	service_url = 'https://www.googleapis.com/freebase/v1/search'
 	params = {
 	        'query': query,
@@ -29,9 +26,7 @@ def searchQuery(query, api_key):
 # function to do Topic API call
 def topicQuery(topic_id, api_key):
 
-	#api_key = open("api_key.txt").read()
 	service_url = 'https://www.googleapis.com/freebase/v1/topic'
-	# topic_id = '/m/016z2j' # id of actor
 	params = {
 	  'key': api_key,
 	  'filter': 'all'
@@ -63,7 +58,6 @@ def infoExtractor(pattern, infoBox, topicResult):
 	propertyDict = {}
 	# If there is third level of information
 	thirdLevel = False
-	# infoBox = {}
 
 	# Build a dictionary of the entities we are interested in
 	with open(pattern,"r") as text:
@@ -89,7 +83,6 @@ def infoExtractor(pattern, infoBox, topicResult):
 			#print "Pattern matching"
 			if type(propertyDict[prop]) is dict:
 				# array of "values"
-				#print "multiple entries"
 				# multiple property needs to be extracted
 
 				for subprop2 in propertyDict[prop]:
@@ -107,8 +100,6 @@ def infoExtractor(pattern, infoBox, topicResult):
 					
 					for subprop in propertyDict[prop]:
 						if subprop in temp2:
-							#print subprop
-							#print temp2[subprop]['values']
 							if temp2[subprop]['values'] != []:
 								tempDict[propertyDict[prop][subprop]] = temp2[subprop]['values'][0]['text']
 							else:
@@ -117,18 +108,16 @@ def infoExtractor(pattern, infoBox, topicResult):
 					infoBox[propertyDict[prop][subprop2]].append(tempDict)
 					tempDict = {}
 
-
+			# When there is only one layer to go in order to read the data
 			else:
 				if 'valuetype' in temp:
 					infoBox[propertyDict[prop]] = []
 					for result in temp['values']:	
 						if temp["valuetype"] != "object":
-							# print temp['values'][0]['value']
 							infoBox[propertyDict[prop]].append(result['value'])
 						else:
 							infoBox[propertyDict[prop]].append(result['text'])
 
-					#print infoBox[propertyDict[prop]]
 				
 			
 	
@@ -142,7 +131,7 @@ def printInfobox():
 
 # Do MQL query
 def mqlQuery(query, api_key):
-	#api_key = open("api_key.txt").read()
+
 	service_url = 'https://www.googleapis.com/freebase/v1/mqlread'
 
 	# We are only looking for two types -- Book and Organizations
@@ -196,8 +185,10 @@ def printResponse(data, queryType):
 	string = ''
 	index = 0
 
+	# sort the response according to the 'name'
 	newlist = sorted(data['result'], key=itemgetter('name')) 
 
+	# Construct the sentence and print in the console
 	if newlist != []:
 		for entry in newlist:
 			index += 1
@@ -276,8 +267,6 @@ def main():
 	
 
 	if queryType == 'infobox':
-		# query = "Robert Downey Jr."
-		#print query
 		searchResult = searchQuery(query, api_key)
 		jsonWrite(searchResult, 'search_response.txt')
 
@@ -286,17 +275,12 @@ def main():
 		# To store the information extracted from Topic API response
 		infoBox = {}
 
-		# iteration = 0
-
 	 	for result in searchResult['result']:
 	 		topicResult = topicQuery(result['mid'], api_key)
 			entityDict, match = matchEntity(topicResult['property']['/type/object/type']['values'])
 
 			if match == True:
 				break
-			# iteration += 1
-
-		#print entityDict
 
 		
 		printEntityDict(entityDict,query)
@@ -319,15 +303,9 @@ def main():
 		printInfobox()
 
 	elif queryType == 'question':
-		# print query
 
 		matchObj = re.match(r'Who created (.*?)\?', query, re.I)
 		query = matchObj.group(1)
-
-		# Get rid of the question mark
-		# if query[-1] == '?':
-		# 	query = query[:-1]
-		#print query
 
 		response = mqlQuery(query, api_key)
 

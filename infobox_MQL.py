@@ -282,7 +282,7 @@ def main():
 			if match == True:
 				break
 
-		
+		# test	
 		printEntityDict(entityDict,query)
 		jsonWrite(topicResult, 'topic_response.txt')
 

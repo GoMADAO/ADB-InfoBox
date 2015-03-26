@@ -22,6 +22,10 @@ def searchQuery(query, api_key):
 	}
 	url = service_url + '?' + urllib.urlencode(params)
 	response = json.loads(urllib.urlopen(url).read())
+
+	if response['result'] == []:
+		# Do something here 
+		print "No related information about query ["+query+"] was found!"
 	return response
 
 # function to do Topic API call
@@ -620,29 +624,30 @@ def callAndPrint(api_key, query, queryType):
 			# iteration += 1
 
 		# Headers for infobox
-		print "Query-Question: "+query
+		if match == True:
+			print "Query-Question: "+query
 
-		displayDic=printEntityDict(entityDict,query)
+			displayDic=printEntityDict(entityDict,query)
 
-		jsonWrite(topicResult, 'topic_response.txt')
+			jsonWrite(topicResult, 'topic_response.txt')
 
-		infoExtractor('person_property.txt', infoBox, topicResult)
+			infoExtractor('person_property.txt', infoBox, topicResult)
 
-		infoExtractor('author_property.txt', infoBox, topicResult)
+			infoExtractor('author_property.txt', infoBox, topicResult)
 
-		infoExtractor('actor_property.txt', infoBox, topicResult)
+			infoExtractor('actor_property.txt', infoBox, topicResult)
 
-		infoExtractor('businessperson_property.txt', infoBox, topicResult)
+			infoExtractor('businessperson_property.txt', infoBox, topicResult)
 
-		infoExtractor('sportsteam_property.txt', infoBox, topicResult)
+			infoExtractor('sportsteam_property.txt', infoBox, topicResult)
 
-		infoExtractor('league_property.txt', infoBox, topicResult)
+			infoExtractor('league_property.txt', infoBox, topicResult)
 
-		jsonWrite(infoBox, 'infoBox.txt')
+			jsonWrite(infoBox, 'infoBox.txt')
 
-		printInfobox(displayDic)
+			printInfobox(displayDic)
 
-		print "\n\n\n"
+			print "\n\n\n"
 
 	elif queryType == 'question':
 
@@ -681,7 +686,7 @@ def main():
 	parser.add_argument('-k', '--key', nargs=1, required=True,\
 			dest="key", help='input API Key')
 	parser.add_argument('-q', '--query', nargs='*', dest='query', help='input query')
-	parser.add_argument('-t', '--type', nargs=1, required=True, \
+	parser.add_argument('-t', '--type', nargs=1, required=False, \
 			dest='qtype', help='input query type')
 	parser.add_argument('-f', '--file',  nargs=1, dest='filename', help='input filename')
 
@@ -692,19 +697,25 @@ def main():
 	queryType = args.qtype
 	filename = args.filename
 
+	interactive = False
+
+	if fileName == None and querylist == None and queryType == None:
+		interactive = True
+
 	# Checking valid of input type : cannot have both -q and -f
 	if filename !=None and querylist!=None:
 		printRunFormat()
 		exit()
 
 	# Checking valid of input type : cannot have None of both -q and -f 
-	if filename ==None and querylist==None:
+	if filename ==None and querylist==None and interactive == False:
 		printRunFormat()
 		exit()
 
 	# Taking api_key and type from command line
-	api_key=''.join(api_key)	
-	queryType= ''.join(queryType)
+	api_key=''.join(api_key)
+	if queryType:	
+		queryType= ''.join(queryType)
 	
 	# File: call functions iteratively 
 	if filename != None and querylist == None:
@@ -721,6 +732,23 @@ def main():
 		query= ' '.join(querylist)
 		# Main function
 		callAndPrint(api_key, query, queryType)
+
+	if fileName == None and querylist == None and queryType == None:
+		print "Welcome to infoxbox creator using Freebase knowledge graph.\n\
+			   Feel curious? Start exploring..."
+
+	 	query = input("Please enter your query(with double quote): ")
+	 	print "Let me see..."
+
+	 	while query != 'exit':
+	 		# Identity which type of query it is
+
+	 		callAndPrint(api_key, query, queryType)
+
+	 		# Ask for next query
+	 		query = input("Please enter your query(with double quote): ")
+
+
 	
 
 if __name__ == '__main__':

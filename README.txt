@@ -4,18 +4,26 @@ a. Names: Mingfei Ge(mg3534), Jialun Liu(jl4347)
 =================================================================================
 b. List of files we submit
 =================================================================================
-README.txt				
+README.txt	
+##### Configuration files #####			
 actor_property.txt		
-author_property.txt	Author 
+author_property.txt
 businessperson_property.txt
-entity.txt				
-infobox_MQL.py			
-league_property.txt	merge 
-person_property.txt	Person 
+entity.txt		
+league_property.txt 
+person_property.txt 
 sportsteam_property.txt
-##### execute file
 
+##### main script #####	
+infobox_MQL.py			
 
+##### file for queries #####	
+test_question.txt
+test_info.txt
+
+##### transcripts #####
+transcript_infobox.txt
+transcript_question.txt
 
 =================================================================================
 c. How to run our program
@@ -25,18 +33,25 @@ c. How to run our program
 
 
 =================================================================================
-	How compile source code (If the above does not work)
-=================================================================================
-
-
-
-=================================================================================
 d. Internal design of our project
 =================================================================================
 The program has two main steps. 1) Getting Freebase data based on predefined 
 structures, 2) Print data with barline boundaries
 
-1) // unfinished
+1) The program first reads the "entity.txt" configuration:
+/people/person
+/book/author
+/film/actor
+/tv/tv_actor
+/organization/organization_founder
+/business/board_member
+/sports/sports_league
+/sports/sports_team
+/sports/professional_sports_team
+
+Which are actually six properties this project is interested in, like "Person", "Actor" etc.
+
+
 
 
 
@@ -74,8 +89,21 @@ f. API Key
 =================================================================================
 AIzaSyDqQg19UvY-wFQD78Wbdh6oy7BbO3OyyOM
 
+requests per second per user:
+defualt number: 10
+
 
 =================================================================================
 g. Additional information
 =================================================================================
+1. We don't have interactive mode like the reference implementation.
 
+2. For actors, we don't print out the tv_actor property
+
+3. For queries like "NFL" where it has information about "League" and books written about the NFL would be
+considered as both "League" and "Author". We designed it this way so that we could have more comprehensive
+information about the query.
+
+4. When certain information like "location" does not exist in the json response, we don't print it in the infobox.
+However, for cases like "PlayerRoster" where it has multiple properties "From", "To" etc., we would leave the 
+field blank if there is no data available. 

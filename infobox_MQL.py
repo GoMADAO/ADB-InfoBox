@@ -218,7 +218,7 @@ def printInfobox(displayDic):
 	if displayDic['BUSINESS_PERSON'] == True or displayDic['ACTOR'] == True or\
 		displayDic['AUTHOR'] == True:
 		
-		if data.has_key('Name'):
+		if data.has_key('Name') and displayDic['LEAGUE']==False and displayDic['SPORTS TEAM']==False:
 			printWithCrlf('Name', ''.join(data['Name']), ALLOW_INDENT)
 		if data.has_key('Birthday'):
 			printWithCrlf('Birthday', ''.join(data['Birthday']), ALLOW_INDENT)
@@ -249,7 +249,7 @@ def printInfobox(displayDic):
 			spouse = {'Name/From/To/Location':'Spouse/Marriage from/Marriage to/Marriage location'}
 			printDict('Spouses', data['Spouse'] , ALLOW_INDENT, spouse)
 
-		if data.has_key('Description'):
+		if data.has_key('Description') and displayDic['LEAGUE']==False and displayDic['SPORTS TEAM']==False:
 			printWithCrlf('Descriptions', ''.join(data['Description']), ALLOW_INDENT)
 		
 

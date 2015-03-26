@@ -301,6 +301,9 @@ def printInfobox(displayDic):
 			printWithCrlf('Official WebSite', ''.join(data['WebSite']), ALLOW_INDENT)
 		if data.has_key('Championship'):
 			printWithCrlf('Championship', ''.join(data['Championship']), ALLOW_INDENT)
+		if data.has_key('Team'):
+			team = {'Team':'Team'}
+			printDict('Teams', data['Team'],ALLOW_INDENT, team)
 		if data.has_key('Description'):
 			printWithCrlf('Description', ''.join(data['Description']), ALLOW_INDENT)
 

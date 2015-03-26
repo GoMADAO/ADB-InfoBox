@@ -139,7 +139,6 @@ def mqlQuery(query, api_key):
 	  	"id": None,
 	  	"name": None,
 	  	"type": "/book/author",
-	  	"limit": 1000
 	}]
 	params = {
 	        'query': json.dumps(query1),
@@ -165,21 +164,21 @@ def mqlQuery(query, api_key):
 	response2 = json.loads(urllib.urlopen(url2).read())
 	
 	# return response
-	return response
+	return response, response2
 
 # Write JSON response to file
 def jsonWrite(data, fileName):
 	with open(fileName, 'w') as outfile:
 		json.dump(data, outfile, sort_keys = True, indent = 4)
 
-def printResponse(data, queryType):
+def printResponse(data, queryType, index):
 	if queryType == 'book':
 		key = '/book/author/works_written'
 	elif queryType == 'organization':
 		key = '/organization/organization_founder/organizations_founded'
 
 	string = ''
-	index = 0
+	# index = 0
 
 	# sort the response according to the 'name'
 	newlist = sorted(data['result'], key=itemgetter('name')) 
@@ -194,6 +193,8 @@ def printResponse(data, queryType):
 					string += ', <'+entry[key][book]['a:name']+'>'
 
 			print string
+
+	return index
 
 def printRunFormat():
 		'''
@@ -640,11 +641,14 @@ def callAndPrint(api_key, query, queryType):
 		matchObj = re.match(r'Who created (.*?)\?', query, re.I)
 		query = matchObj.group(1)
 
-		response = mqlQuery(query, api_key)
+		author, founder = mqlQuery(query, api_key)
 
-		printResponse(response, 'book')
-		jsonWrite(response, 'book_mql.txt')
-		# jsonWrite(response2, 'founder_mql.txt')
+		index = 0
+
+		index = printResponse(author, 'book', index)
+		jsonWrite(author, 'book_mql.txt')
+		index = printResponse(founder, 'organization', index)
+		jsonWrite(founder, 'founder_mql.txt')
 
 
 def main():

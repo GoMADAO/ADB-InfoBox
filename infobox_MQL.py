@@ -619,6 +619,9 @@ def callAndPrint(api_key, query, queryType):
 				break
 			# iteration += 1
 
+		# Headers for infobox
+		print "Query-Question: "+query
+
 		displayDic=printEntityDict(entityDict,query)
 
 		jsonWrite(topicResult, 'topic_response.txt')
@@ -639,6 +642,8 @@ def callAndPrint(api_key, query, queryType):
 
 		printInfobox(displayDic)
 
+		print "\n\n\n"
+
 	elif queryType == 'question':
 
 		matchObj = re.match(r'Who created (.*?)\?', query, re.I)
@@ -646,12 +651,17 @@ def callAndPrint(api_key, query, queryType):
 
 		author, founder = mqlQuery(query, api_key)
 
+		# Print out the query first
+		print "Query-Question: Who created "+query+"?\n\n\n"
+
 		index = 0
 
 		index = printResponse(author, 'book', index)
 		jsonWrite(author, 'book_mql.txt')
 		index = printResponse(founder, 'organization', index)
 		jsonWrite(founder, 'founder_mql.txt')
+
+		print "\n\n\n"
 
 
 def main():

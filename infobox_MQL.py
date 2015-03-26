@@ -699,7 +699,7 @@ def main():
 
 	interactive = False
 
-	if fileName == None and querylist == None and queryType == None:
+	if filename == None and querylist == None and queryType == None:
 		interactive = True
 
 	# Checking valid of input type : cannot have both -q and -f
@@ -733,15 +733,20 @@ def main():
 		# Main function
 		callAndPrint(api_key, query, queryType)
 
-	if fileName == None and querylist == None and queryType == None:
-		print "Welcome to infoxbox creator using Freebase knowledge graph.\n\
-			   Feel curious? Start exploring..."
+	if interactive == True:
+		print "Welcome to infoxbox creator using Freebase knowledge graph.\n"
+		print "Feel curious? Start exploring...\n\n"
 
 	 	query = input("Please enter your query(with double quote): ")
-	 	print "Let me see..."
 
 	 	while query != 'exit':
+	 		print "Let me see..."
 	 		# Identity which type of query it is
+	 		matchObj = re.match(r'Who created (.*?)\?', query, re.I)
+	 		if matchObj:
+	 			queryType = 'question'
+	 		else:
+	 			queryType = 'infobox'
 
 	 		callAndPrint(api_key, query, queryType)
 

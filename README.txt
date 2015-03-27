@@ -32,6 +32,13 @@ c. How to run our program
 2. python infobox_MQL.py -k <API KEY> -t <infobox|question> -f <filename>
 3. python infobox_MQL.py -k <API KEY>
 
+A general note for question query:
+Please follow the following pattern, otherwise you are going to break the program:
+
+Who created xxxxxxx?
+
+Any other query not in this format would lead to errors in pattern matching.
+
 
 A note for the third option (interactive mode):
 1. We tried to implement the interactive mode as close to the reference implementation as possible,
@@ -40,6 +47,9 @@ but they are not exactly the same.
 2. When enter queries in this mode, wrap your query with double quotes, "Who created Microsoft?",
 please don't forget the question mark, and this question mark issue applies to the first two 
 implementations as well.
+
+3. You can type "exit" to exit the program when the program is asking for query,
+remember to wrap with double qutoes.
 
 
 =================================================================================

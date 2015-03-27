@@ -96,14 +96,12 @@ defualt number: 10
 =================================================================================
 g. Additional information
 =================================================================================
-1. We don't have interactive mode like the reference implementation.
+1. For actors, we don't print out the tv_actor property
 
-2. For actors, we don't print out the tv_actor property
-
-3. For queries like "NFL" where it has information about "League" and books written about the NFL would be
+2. For queries like "NFL" where it has information about "League" and books written about the NFL would be
 considered as both "League" and "Author". We designed it this way so that we could have more comprehensive
 information about the query.
 
-4. When certain information like "location" does not exist in the json response, we don't print it in the infobox.
+3. When certain information like "location" does not exist in the json response, we don't print it in the infobox.
 However, for cases like "PlayerRoster" where it has multiple properties "From", "To" etc., we would leave the 
 field blank if there is no data available. 

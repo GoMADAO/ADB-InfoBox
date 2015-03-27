@@ -613,7 +613,7 @@ def callAndPrint(api_key, query, queryType):
 		# To store the information extracted from Topic API response
 		infoBox = {}
 
-		# iteration = 0
+		iteration = 1
 
 	 	for result in searchResult['result']:
 	 		topicResult = topicQuery(result['mid'], api_key)
@@ -621,7 +621,10 @@ def callAndPrint(api_key, query, queryType):
 
 			if match == True:
 				break
-			# iteration += 1
+			iteration += 1
+
+			if (iteration % 5) == 0:
+				print str(iteration) + " Search API result entries were considered. None of them of a supported type."
 
 		# Headers for infobox
 		if match == True:
@@ -665,6 +668,9 @@ def callAndPrint(api_key, query, queryType):
 		jsonWrite(author, 'book_mql.txt')
 		index = printResponse(founder, 'organization', index)
 		jsonWrite(founder, 'founder_mql.txt')
+
+		if index == 0:
+			print "No related information about query [Who created "+query+"?] was found!"
 
 		print "\n\n\n"
 

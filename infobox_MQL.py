@@ -556,6 +556,7 @@ def printRunFormat():
 		print "Run the script by following format:"
 		print "python infobox_MQL.py -k <Freebase API key> -q <query> -t <infobox|question>"
 		print "python infobox_MQL.py -k <Freebase API key> -f <file of queries> -t <infobox|question>"	
+		print "python infobox_MQL.py -k <Freebase API key>"
 
 
 def printEntityDict(entityDic, query):

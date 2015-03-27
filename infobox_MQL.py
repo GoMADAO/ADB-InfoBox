@@ -588,6 +588,7 @@ def printEntityDict(entityDic, query):
 
 	print ' ---------------------------------------------------------------------------------------------------'
 
+
 	temp_str=''
 	for item in displayDic:
 		if displayDic[item]==True:
@@ -631,7 +632,7 @@ def callAndPrint(api_key, query, queryType):
 		if match == True:
 			print "Query-Question: "+query
 
-			displayDic=printEntityDict(entityDict,query)
+			
 
 			jsonWrite(topicResult, 'topic_response.txt')
 
@@ -648,6 +649,14 @@ def callAndPrint(api_key, query, queryType):
 			infoExtractor('league_property.txt', infoBox, topicResult)
 
 			jsonWrite(infoBox, 'infoBox.txt')
+
+			data_file = open("infoBox.txt","r")
+			
+			data = json.load(data_file)
+			if data.has_key('Name'):
+				value_name = ''.join(data['Name'])
+			data_file.close()
+			displayDic=printEntityDict(entityDict,value_name)
 
 			printInfobox(displayDic)
 
